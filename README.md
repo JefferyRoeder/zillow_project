@@ -8,7 +8,7 @@ The code was written in Python 3.7.3 and you will need to have pandas, numpy, ma
 
 ## Installing
 
-You will need the following Python files from the respository to run the project: acquire.py, prep.py, split_scale.py, and model.ipynb
+You will need the following Python files from the respository to run the project: acquire.py, prep.py, split_scale.py, exploration, feature_selection, and model_final.ipynb
 
 ## Running the model
 

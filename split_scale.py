@@ -2,6 +2,9 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, PowerTransformer, MinMaxScaler, RobustScaler, QuantileTransformer
 from sklearn.model_selection import train_test_split
 import numpy as np
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+import split_scale
 
 def split_my_data(data, train_ratio=.80, seed=123):
     '''the function will take a dataframe and returns train and test dataframe split 
@@ -44,3 +47,15 @@ def iqr_robust_scaler(train, test):
     train_scaled = pd.DataFrame(scaler.transform(train), columns=train.columns.values).set_index([train.index.values])
     test_scaled = pd.DataFrame(scaler.transform(test), columns=test.columns.values).set_index([test.index.values])
     return scaler, train_scaled, test_scaled
+
+
+def split_scale_df(df):
+    train, test = split_scale.split_my_data(df,train_ratio=.8,seed=123)
+    scaler, train, test = split_scale.standard_scaler(train,test)
+    X_train = train.drop(columns='tax_value')
+    y_train = train[['tax_value']]
+    X_test = test.drop(columns='tax_value')
+    y_test = test[['tax_value']]
+    ols_model = ols('y_train ~ X_train',data=train).fit()
+    train['yhat'] = ols_model.predict(y_train)
+    return train,test,X_train,y_train,X_test,y_test,ols_model
