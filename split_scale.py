@@ -50,8 +50,25 @@ def iqr_robust_scaler(train, test):
 
 
 def split_scale_df(df):
+    
     train, test = split_scale.split_my_data(df,train_ratio=.8,seed=123)
+
     scaler, train, test = split_scale.standard_scaler(train,test)
+
+    X_train = train.drop(columns='tax_value')
+    y_train = train[['tax_value']]
+    X_test = test.drop(columns='tax_value')
+    y_test = test[['tax_value']]
+    ols_model = ols('y_train ~ X_train',data=train).fit()
+    train['yhat'] = ols_model.predict(y_train)
+    return train,test,X_train,y_train,X_test,y_test,ols_model
+
+def split_unscale_df(df):
+    
+    train, test = split_scale.split_my_data(df,train_ratio=.8,seed=123)
+
+    #scaler, train, test = split_scale.standard_scaler(train,test)
+
     X_train = train.drop(columns='tax_value')
     y_train = train[['tax_value']]
     X_test = test.drop(columns='tax_value')

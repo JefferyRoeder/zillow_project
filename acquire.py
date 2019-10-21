@@ -7,6 +7,7 @@ import split_scale
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import wrangle
 import env
+import seaborn as sns
 
 url = env.get_db_url('zillow')
 #
@@ -103,3 +104,12 @@ p.taxvaluedollarcnt > 0
 """
 ,url)
     return df
+
+from matplotlib import pyplot as plt
+def tax_rate_distro(df_tax):
+    g = sns.FacetGrid(df_tax, col = "county")
+    g.map(plt.hist, "tax_rate")
+    plt.xlim(-.03,.03)
+    plt.xticks(np.arange(-.01, .03, step=0.01))
+
+    plt.show()
